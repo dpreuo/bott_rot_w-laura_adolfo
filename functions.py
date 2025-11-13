@@ -107,7 +107,7 @@ def chern_marker(l, P, fix=False):
         shifts_x = (shifts_x + 0.5) % 1 - 0.5
         shifts_y = (shifts_y + 0.5) % 1 - 0.5
 
-    marker2 = einsum("ij,jk,kl,li -> i", P, P * shifts_x, P * shifts_y, P, optimize=True).imag
+    marker2 = einsum("ij,jk,kl,li -> i", P, P * shifts_x, P * shifts_y, P).imag
 
     # sum over orbitals
     m_out  = marker2.reshape(l.n_vertices, n_orbitals).sum(axis=1)
