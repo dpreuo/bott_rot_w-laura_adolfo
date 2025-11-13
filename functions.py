@@ -1,4 +1,5 @@
 import numpy as np
+from jax.numpy import einsum
 
 sigma_x = np.array([[0, 1], [1, 0]])
 sigma_y = np.array([[0, -1j], [1j, 0]])
@@ -106,8 +107,8 @@ def chern_marker(l, P, fix=False):
         shifts_x = (shifts_x + 0.5) % 1 - 0.5
         shifts_y = (shifts_y + 0.5) % 1 - 0.5
 
-    marker = (P @ (P * shifts_x) @ (P * shifts_y) @ P).diagonal().imag
+    marker2 = einsum("ij,jk,kl,li -> i", P, P * shifts_x, P * shifts_y, P, optimize=True).imag
 
     # sum over orbitals
-    m_out  = marker.reshape(l.n_vertices, n_orbitals).sum(axis=1)
+    m_out  = marker2.reshape(l.n_vertices, n_orbitals).sum(axis=1)
     return m_out * 4 * np.pi * l.n_vertices 
